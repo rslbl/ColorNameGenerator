@@ -34,6 +34,7 @@ tasks {
     patchPluginXml {
         sinceBuild.set("213")
         untilBuild.set("223.*")
+        changeNotes.set("This plugin shows the appropriate names for your color codes.")
     }
 
     signPlugin {
@@ -51,6 +52,5 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
-    implementation("io.reactivex.rxjava2:rxjava:2.2.19")
-    implementation("com.github.akarnokd:rxjava2-swing:0.3.7")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
 }

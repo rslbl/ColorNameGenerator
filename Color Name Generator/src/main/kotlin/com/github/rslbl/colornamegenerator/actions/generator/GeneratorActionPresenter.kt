@@ -1,5 +1,10 @@
 package com.github.rslbl.colornamegenerator.actions.generator
 
+import com.github.rslbl.colornamegenerator.base.BasePresenter
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+
 interface GeneratorActionPresenter {
     fun getColorByHex(hex: String)
     fun getColorByRGB(rgb: String)
@@ -8,22 +13,22 @@ interface GeneratorActionPresenter {
 class GeneratorActionPresenterImp(
     private val view: GeneratorFormView,
     private val repository: GeneratorRepository
-) : GeneratorActionPresenter {
+) : GeneratorActionPresenter, BasePresenter() {
 
     override fun getColorByHex(hex: String) {
-        repository.getColorByHex(hex)
-            .subscribe(
-                { color -> view.showColors(color) },
-                { error -> view.error(error) }
-            )
+        launch {
+            repository.getColorByHex(hex)
+                .catch { view.error(it) }
+                .collect { view.showHexColor(it) }
+        }
     }
 
     override fun getColorByRGB(rgb: String) {
-        repository.getColorByRGB(rgb)
-            .subscribe(
-                { color -> view.showColors(color) },
-                { error -> view.error(error) }
-            )
+        launch {
+            repository.getColorByRGB(rgb)
+                .catch { view.error(it) }
+                .collect { view.showRGBColor(it) }
+        }
     }
 
 }

@@ -2,27 +2,30 @@ package com.github.rslbl.colornamegenerator.actions.generator
 
 import com.github.rslbl.colornamegenerator.data.model.ColorResponse
 import com.github.rslbl.colornamegenerator.data.remote.GeneratorServiceApi
-import hu.akarnokd.rxjava2.swing.SwingSchedulers
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 interface GeneratorRepository {
-    fun getColorByHex(hex: String): Single<ColorResponse>
-    fun getColorByRGB(rgb: String): Single<ColorResponse>
+    suspend fun getColorByHex(hex: String): Flow<ColorResponse>
+    suspend fun getColorByRGB(rgb: String): Flow<ColorResponse>
 }
 
 class GeneratorRepositoryImp(
     private val api: GeneratorServiceApi
 ) : GeneratorRepository {
 
-    override fun getColorByHex(hex: String): Single<ColorResponse> =
-        api.getColorByHex(hex)
-            .subscribeOn(Schedulers.io())
-            .observeOn(SwingSchedulers.edt())
+    override suspend fun getColorByHex(hex: String): Flow<ColorResponse> =
+        flow {
+            val data = api.getColorByHex(hex)
+            emit(data)
+        }.flowOn(Dispatchers.IO)
 
-    override fun getColorByRGB(rgb: String): Single<ColorResponse> =
-        api.getColorByRGB(rgb)
-            .subscribeOn(Schedulers.io())
-            .observeOn(SwingSchedulers.edt())
+    override suspend fun getColorByRGB(rgb: String): Flow<ColorResponse> =
+        flow {
+            val data = api.getColorByRGB(rgb)
+            emit(data)
+        }.flowOn(Dispatchers.IO)
 
 }

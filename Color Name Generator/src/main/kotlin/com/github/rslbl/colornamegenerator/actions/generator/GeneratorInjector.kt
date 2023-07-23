@@ -16,7 +16,6 @@ class GeneratorInjectorImp : GeneratorInjector {
 
     override val api: GeneratorServiceApi by lazy {
         Retrofit.Builder()
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create())
             .baseUrl("https://www.thecolorapi.com/")
             .build()
